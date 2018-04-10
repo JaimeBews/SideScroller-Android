@@ -20,6 +20,7 @@ public class Player implements GameObject {
     boolean ICANTMOVEWTFbutIwasgoingleftjustfyi ;
     boolean onGround=false;
     boolean hitHead = false;
+    boolean Jump = false;
     public Player(Bitmap bitmap, float xPos, float yPos){
         m_Bitmap=bitmap;
         m_xPos=xPos;
@@ -31,6 +32,10 @@ public class Player implements GameObject {
     public void draw(Canvas canvas){
         canvas.drawBitmap(m_Bitmap,m_xPos,m_yPos,null);//TODO animate
     }
+   // public void Jump(){
+   //     if(onGround)
+   //         m_YSpeed=-3;
+   // }
     public void update(){
         if(MovementRight&&!ICANTMOVEWTFbutIwasgoingrightjustfyi){
             this.m_xPos+=m_XSpeed;
@@ -39,10 +44,21 @@ public class Player implements GameObject {
             this.m_xPos-=m_XSpeed;
         }
         if(!onGround){
-            this.m_YSpeed*=m_YAccel;
+            if(this.m_YSpeed>0)
+                this.m_YSpeed=this.m_YSpeed *m_YAccel;
+            else if (this.m_YSpeed<-.3f)
+                this.m_YSpeed=this.m_YSpeed *1/m_YAccel;
+            else
+                this.m_YSpeed=0.3f;
             this.m_yPos+=m_YSpeed;
-        }else
-            m_YSpeed=0;
+        }
+        if(Jump) {
+            this.m_yPos-=5;
+            m_YSpeed = -8;
+            Jump=false;
+            onGround=false;
+        }
+
         if(hitHead){
             m_YSpeed=.2f;
         }

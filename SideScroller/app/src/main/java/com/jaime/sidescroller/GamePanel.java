@@ -96,7 +96,10 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
                 }
                 if (event.getX()<100&&event.getX()>0){
                     player.MovementLeft = true;
-                }
+                }if (event.getX()>200&&player.onGround) {
+                  player.Jump = true;
+
+            }
                 break;
 
             case MotionEvent.ACTION_MOVE:
@@ -116,13 +119,10 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         for( Obstacle obstacle : obstacles) {//object block obstalce TODO stick this inside a collision method and have 8 collision points corners and mids
             if ((player.m_xPos+11 < obstacle.m_xPos + obstacle.width && player.m_xPos + player.m_Bitmap.getWidth()-11 > obstacle.m_xPos) &&
                  (player.m_yPos+ player.m_Bitmap.getHeight()-10 < obstacle.m_yPos + obstacle.height && player.m_yPos + player.m_Bitmap.getHeight() > obstacle.m_yPos)) {//Player bottom
-                    if (obstacle.tag == "Wall") {
-                        touched = true;
-                        if(!player.onGround){
-                            player.m_yPos=obstacle.m_yPos-player.m_Bitmap.getHeight();
-                            player.onGround = true;
-                        }
-                    }
+                    touched = true;
+                    player.m_yPos=obstacle.m_yPos-player.m_Bitmap.getHeight()+1;
+                    player.onGround = true;
+
                 }
             if ((player.m_xPos+11 < obstacle.m_xPos + obstacle.width && player.m_xPos + player.m_Bitmap.getWidth()-11 > obstacle.m_xPos) &&
                     (player.m_yPos < obstacle.m_yPos + obstacle.height && player.m_yPos + 10 > obstacle.m_yPos)){//Player top
@@ -130,7 +130,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
                     touched = true;
                 }
             if ((player.m_xPos+ player.m_Bitmap.getWidth()-20 < obstacle.m_xPos + obstacle.width && player.m_xPos + player.m_Bitmap.getWidth() > obstacle.m_xPos) &&
-                    (player.m_yPos < obstacle.m_yPos + obstacle.height && player.m_yPos + player.m_Bitmap.getHeight() > obstacle.m_yPos)){//Player right
+                    (player.m_yPos < obstacle.m_yPos + obstacle.height && player.m_yPos + player.m_Bitmap.getHeight()-2 > obstacle.m_yPos)){//Player right
                          touched = true;
                         if (player.MovementRight) {
                             player.ICANTMOVEWTFbutIwasgoingrightjustfyi = true;
@@ -138,7 +138,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
                         }
             }
             else if ((player.m_xPos < obstacle.m_xPos + obstacle.width && player.m_xPos +10 > obstacle.m_xPos) &&
-                    (player.m_yPos < obstacle.m_yPos + obstacle.height && player.m_yPos + player.m_Bitmap.getHeight() > obstacle.m_yPos)){//Player left
+                    (player.m_yPos < obstacle.m_yPos + obstacle.height && player.m_yPos + player.m_Bitmap.getHeight()-2 > obstacle.m_yPos)){//Player left
                 touched = true;
                 if (player.MovementLeft) {
                     player.ICANTMOVEWTFbutIwasgoingleftjustfyi = true;
@@ -158,7 +158,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
     @Override
     public void draw(Canvas canvas){
         super.draw(canvas);
-        System.out.println(player.ICANTMOVEWTFbutIwasgoingrightjustfyi);
+        System.out.println(player.onGround);
         for( Obstacle obstacle : obstacles) {
             obstacle.draw(canvas);
         }
