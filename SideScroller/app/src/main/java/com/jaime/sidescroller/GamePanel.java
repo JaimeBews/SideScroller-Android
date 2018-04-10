@@ -89,6 +89,25 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
     int counter=0;
     @Override
     public boolean onTouchEvent(MotionEvent event){
+        switch(event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                if (event.getX()<200&&event.getX()>100){
+                    player.MovementRight = true;
+                }
+                if (event.getX()<100&&event.getX()>0){
+                    player.MovementLeft = true;
+                }
+                break;
+
+            case MotionEvent.ACTION_MOVE:
+                // touch move code
+                break;
+
+            case MotionEvent.ACTION_UP:
+               player.MovementRight=false;
+                player.MovementLeft = false;
+                break;
+        }
         return true;
     }
     public void update(){
@@ -98,7 +117,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
                     System.out.println(obstacle);
                 }
         }
-
+         player.update();
     }
     @Override
     public void draw(Canvas canvas){
