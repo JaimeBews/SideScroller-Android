@@ -57,10 +57,10 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
             default:
                 break;
             case 4:
-                obstacles.add(new Obstacle(grass,xPos,yPos));
+                obstacles.add(new Obstacle(grass,xPos,yPos,"Wall"));//Bitmap, left, top, GameTag
                 break;
             case 3:
-                obstacles.add(new Obstacle(stone,xPos,yPos));
+                obstacles.add(new Obstacle(stone,xPos,yPos,"Wall"));
                 break;
 
         }
@@ -104,24 +104,61 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
                 break;
 
             case MotionEvent.ACTION_UP:
-               player.MovementRight=false;
+                player.MovementRight=false;
                 player.MovementLeft = false;
                 break;
         }
         return true;
     }
     public void update(){
-        for( Obstacle obstacle : obstacles) {
-            if (player.m_xPos < obstacle.m_xPos + obstacle.width && player.m_xPos + player.m_Bitmap.getWidth() > obstacle.m_xPos)
-                if (player.m_yPos < obstacle.m_yPos + obstacle.height && player.m_yPos+ player.m_Bitmap.getHeight() > obstacle.m_yPos){
-                    System.out.println(obstacle);
+        player.update();
+        boolean touched=false ;
+        for( Obstacle obstacle : obstacles) {//object block obstalce TODO stick this inside a collision method and have 8 collision points corners and mids
+            if ((player.m_xPos+11 < obstacle.m_xPos + obstacle.width && player.m_xPos + player.m_Bitmap.getWidth()-11 > obstacle.m_xPos) &&
+                 (player.m_yPos+ player.m_Bitmap.getHeight()-10 < obstacle.m_yPos + obstacle.height && player.m_yPos + player.m_Bitmap.getHeight() > obstacle.m_yPos)) {//Player bottom
+                    if (obstacle.tag == "Wall") {
+                        touched = true;
+                        if(!player.onGround){
+                            player.m_yPos=obstacle.m_yPos-player.m_Bitmap.getHeight();
+                            player.onGround = true;
+                        }
+                    }
                 }
+            if ((player.m_xPos+11 < obstacle.m_xPos + obstacle.width && player.m_xPos + player.m_Bitmap.getWidth()-11 > obstacle.m_xPos) &&
+                    (player.m_yPos < obstacle.m_yPos + obstacle.height && player.m_yPos + 10 > obstacle.m_yPos)){//Player top
+                    player.hitHead = true;
+                    touched = true;
+                }
+            if ((player.m_xPos+ player.m_Bitmap.getWidth()-20 < obstacle.m_xPos + obstacle.width && player.m_xPos + player.m_Bitmap.getWidth() > obstacle.m_xPos) &&
+                    (player.m_yPos < obstacle.m_yPos + obstacle.height && player.m_yPos + player.m_Bitmap.getHeight() > obstacle.m_yPos)){//Player right
+                         touched = true;
+                        if (player.MovementRight) {
+                            player.ICANTMOVEWTFbutIwasgoingrightjustfyi = true;
+
+                        }
+            }
+            else if ((player.m_xPos < obstacle.m_xPos + obstacle.width && player.m_xPos +10 > obstacle.m_xPos) &&
+                    (player.m_yPos < obstacle.m_yPos + obstacle.height && player.m_yPos + player.m_Bitmap.getHeight() > obstacle.m_yPos)){//Player left
+                touched = true;
+                if (player.MovementLeft) {
+                    player.ICANTMOVEWTFbutIwasgoingleftjustfyi = true;
+
+
+                }
+            }
         }
-         player.update();
-    }
+             if(!touched) {
+                 player.hitHead = false;
+                 player.onGround=false;
+                 player.ICANTMOVEWTFbutIwasgoingleftjustfyi = false;
+                 player.ICANTMOVEWTFbutIwasgoingrightjustfyi = false;
+             }
+        }
+
     @Override
     public void draw(Canvas canvas){
         super.draw(canvas);
+        System.out.println(player.ICANTMOVEWTFbutIwasgoingrightjustfyi);
         for( Obstacle obstacle : obstacles) {
             obstacle.draw(canvas);
         }

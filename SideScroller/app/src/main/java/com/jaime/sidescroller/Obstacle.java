@@ -14,10 +14,12 @@ public class Obstacle implements GameObject{
     float m_xPos;
     float m_yPos;
     public float width, height;
+    public String tag;
     Bitmap bitmap;
-    public Obstacle(Bitmap bitmap,int xPos,int yPos){
+    public Obstacle(Bitmap bitmap,int xPos,int yPos,String tag){
         super();
         this.bitmap=bitmap;
+        this.tag = tag;
         m_xPos=xPos;
         m_yPos=yPos;
         width = bitmap.getWidth();
