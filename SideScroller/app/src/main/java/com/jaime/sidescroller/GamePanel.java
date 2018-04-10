@@ -27,6 +27,8 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
    // public Obstacle(Bitmap bitmap, float xPos, float yPos);
     private Bitmap grass = BitmapFactory.decodeResource(getResources(), R.drawable.greenbushlol);
     private Bitmap stone = BitmapFactory.decodeResource(getResources(), R.drawable.repeatworldtile);
+    private Bitmap playerBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.player);
+    Player player = new Player(playerBitmap,300,200);
     public ArrayList<Obstacle> obstacles= new ArrayList<>();
     public GamePanel(Context context,int height, int width, int[] data){
         super(context);
@@ -43,8 +45,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
     public void createWorld(){
         for(int i=0; i<height;i++){
             for(int j=1; j<width;j++){
-                int somemath = i*j;
-                createPieceofWorld(data[j+i*width],j*40,i*40);
+                createPieceofWorld(data[j+i*width],j*52,i*52);
             }
         }
     }
@@ -91,10 +92,13 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         return true;
     }
     public void update(){
-      //  for( Obstacle obstacle : obstacles) {
-         //   obstacle.update();
-         //   System.out.println(counter++);
-      //  }
+        for( Obstacle obstacle : obstacles) {
+            if (player.m_xPos < obstacle.m_xPos + obstacle.width && player.m_xPos + player.m_Bitmap.getWidth() > obstacle.m_xPos)
+                if (player.m_yPos < obstacle.m_yPos + obstacle.height && player.m_yPos+ player.m_Bitmap.getHeight() > obstacle.m_yPos){
+                    System.out.println(obstacle);
+                }
+        }
+
     }
     @Override
     public void draw(Canvas canvas){
@@ -102,6 +106,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         for( Obstacle obstacle : obstacles) {
             obstacle.draw(canvas);
         }
+        player.draw(canvas);
     }
 }
 
