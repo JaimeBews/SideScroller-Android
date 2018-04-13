@@ -32,7 +32,7 @@ int[] data;
 
     public void ReadJson(){
         try {
-            InputStream is = this.getResources().openRawResource(R.raw.jsontester);
+            InputStream is = this.getResources().openRawResource(R.raw.level1);
             int size = is.available();
             byte[] buffer = new byte[size];
             is.read(buffer);

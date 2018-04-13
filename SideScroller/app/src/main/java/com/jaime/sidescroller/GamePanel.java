@@ -28,6 +28,11 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
     private Bitmap grass = BitmapFactory.decodeResource(getResources(), R.drawable.greenbushlol);
     private Bitmap stone = BitmapFactory.decodeResource(getResources(), R.drawable.repeatworldtile);
     private Bitmap playerBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.player);
+    private Bitmap brick = BitmapFactory.decodeResource(getResources(), R.drawable.brick);
+    private Bitmap dirt_top = BitmapFactory.decodeResource(getResources(), R.drawable.dirt_grass);
+    private Bitmap dirt_bot = BitmapFactory.decodeResource(getResources(), R.drawable.dirt);
+    private Bitmap end_point = BitmapFactory.decodeResource(getResources(), R.drawable.end_point);
+    private Bitmap enemy = BitmapFactory.decodeResource(getResources(), R.drawable.golem_still);
     Player player = new Player(playerBitmap,300,200);
     public ArrayList<Obstacle> obstacles= new ArrayList<>();
     public GamePanel(Context context,int height, int width, int[] data){
@@ -45,7 +50,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
     public void createWorld(){
         for(int i=0; i<height;i++){
             for(int j=1; j<width;j++){
-                createPieceofWorld(data[j+i*width],j*52,i*52);
+                createPieceofWorld(data[j+i*width],j*76,i*76);
             }
         }
     }
@@ -56,11 +61,21 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
                 break;
             default:
                 break;
-            case 4:
-                obstacles.add(new Obstacle(grass,xPos,yPos,"Wall"));//Bitmap, left, top, GameTag
+            case 1:
+                obstacles.add(new Obstacle(brick,xPos,yPos,"Wall"));
+                break;
+            case 2:
+                obstacles.add(new Obstacle(dirt_top,xPos,yPos,"Wall"));
                 break;
             case 3:
-                obstacles.add(new Obstacle(stone,xPos,yPos,"Wall"));
+                obstacles.add(new Obstacle(dirt_bot,xPos,yPos,"Wall"));
+                break;
+            case 4:
+                obstacles.add(new Obstacle(end_point,xPos,yPos,"End_Point"));//Bitmap, left, top, GameTag
+                break;
+            case 5:
+                obstacles.add(new Obstacle(enemy
+                        ,xPos,yPos,"Enemy"));
                 break;
 
         }
