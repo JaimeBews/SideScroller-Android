@@ -16,6 +16,17 @@ public class Obstacle implements GameObject{
     public float width, height;
     public String tag;
     Bitmap bitmap;
+    int m_direction =0;
+    public Obstacle(Bitmap bitmap,int xPos,int yPos,String tag,int direction){
+        super();
+        this.bitmap=bitmap;
+        this.tag = tag;
+         m_direction = direction;
+        m_xPos=xPos;
+        m_yPos=yPos;
+        width = bitmap.getWidth();
+        height = bitmap.getHeight();
+    }
     public Obstacle(Bitmap bitmap,int xPos,int yPos,String tag){
         super();
         this.bitmap=bitmap;
@@ -25,11 +36,16 @@ public class Obstacle implements GameObject{
         width = bitmap.getWidth();
         height = bitmap.getHeight();
     }
+
     public void update(){
-        //this doesnt do anything could have ben my issue
+        if(m_direction!=0)
+            m_xPos += m_direction * 3;
+
+
     }
     public void draw(Canvas canvas){
-        canvas.drawBitmap(bitmap,m_xPos,m_yPos,null);
+        if(m_xPos>0&&m_xPos<canvas.getWidth())
+             canvas.drawBitmap(bitmap,m_xPos,m_yPos,null);
 
     }
 }
