@@ -3,6 +3,8 @@ package com.jaime.sidescroller;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 
+import java.util.ArrayList;
+
 /**
  * Created by Jaime on 4/10/2018.
  */
@@ -16,11 +18,15 @@ public class Player implements GameObject {
     float m_YAccel;
     boolean MovementRight = false;
     boolean MovementLeft = false;
+    boolean Jump = false;
     boolean ICANTMOVEWTFbutIwasgoingrightjustfyi;
     boolean ICANTMOVEWTFbutIwasgoingleftjustfyi ;
     boolean onGround=false;
     boolean hitHead = false;
-    boolean Jump = false;
+
+    boolean hitRight = false;
+    boolean hitLeft = false;
+
     public Player(Bitmap bitmap, float xPos, float yPos){
         m_Bitmap=bitmap;
         m_xPos=xPos;
@@ -38,10 +44,23 @@ public class Player implements GameObject {
    // }
     public void update(){
         if(MovementRight&&!ICANTMOVEWTFbutIwasgoingrightjustfyi){
-            this.m_xPos+=m_XSpeed;
+            if(this.m_xPos>1500)
+                hitRight=true;
+            else {
+                hitLeft=false;
+                this.m_xPos += m_XSpeed;
+            }
+        }
+        if(!MovementRight){
+            hitRight=false;
         }
         if(MovementLeft&&!ICANTMOVEWTFbutIwasgoingleftjustfyi){
-            this.m_xPos-=m_XSpeed;
+            if(this.m_xPos<50)
+                hitLeft=true;
+            else {
+                hitRight=false;
+                this.m_xPos -= m_XSpeed;
+            }
         }
         if(!onGround){
             if(this.m_YSpeed>0)
@@ -52,9 +71,10 @@ public class Player implements GameObject {
                 this.m_YSpeed=0.3f;
             this.m_yPos+=m_YSpeed;
         }
+
         if(Jump) {
             this.m_yPos-=5;
-            m_YSpeed = -8;
+            m_YSpeed = -20;
             Jump=false;
             onGround=false;
         }
