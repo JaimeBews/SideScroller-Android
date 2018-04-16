@@ -5,11 +5,12 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Rect;
 import android.os.Looper;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-
+import android.content.Intent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,15 +21,26 @@ import java.util.List;
 
 public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
     private MainThread thread;
-   // Intent myIntent = new Intent(this, "Mac's Menu Scene".class);
+    Intent myIntent = new Intent(getContext(), MenuActivity.class);
     int height;
     int width;
     int[] data;
 
    // public Obstacle(Bitmap bitmap, float xPos, float yPos);
     private Bitmap grass = BitmapFactory.decodeResource(getResources(), R.drawable.greenbushlol);
+    private Bitmap bullet = BitmapFactory.decodeResource(getResources(), R.drawable.ice_bolt);
+    Bitmap resizedbullet = Bitmap.createScaledBitmap(
+            bullet, 200, 100, false);
+    private Bitmap background = BitmapFactory.decodeResource(getResources(), R.drawable.background_inside);
     private Bitmap stone = BitmapFactory.decodeResource(getResources(), R.drawable.repeatworldtile);
-    private Bitmap playerBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.player);
+    Bitmap resizedstone = Bitmap.createScaledBitmap(
+            stone, 100, 100, false);
+    private Bitmap playerBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.wizardwalk);
+    Bitmap resizedplayerBitmap = Bitmap.createScaledBitmap(
+            playerBitmap, 64, 64, false);
+    private Bitmap playerSheetBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.wizardwalk_sheet);
+    Bitmap resizedplayerSheetBitmap = Bitmap.createScaledBitmap(
+            playerSheetBitmap, 64*6, 64, false);
     private Bitmap brick = BitmapFactory.decodeResource(getResources(), R.drawable.brick);
     Bitmap resizedBrick = Bitmap.createScaledBitmap(
             brick, 64, 64, false);
@@ -44,10 +56,10 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
             enemy, 64, 64, false);
 
     public ArrayList<Obstacle> obstacles= new ArrayList<>();
-    Player player = new Player(playerBitmap,300,200);
-    public GamePanel(Context context,int height, int width, int[] data){
-        super(context);
+    Player player = new Player(resizedplayerSheetBitmap,300,200);
 
+    public GamePanel(Context context, int height, int width, int[] data ){
+        super(context);
         getHolder().addCallback(this);
         thread = new MainThread(getHolder(), this);
         this.height=height;
@@ -58,6 +70,10 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         setFocusable(true);
     }
     public void createWorld(){
+        obstacles.add(new Obstacle(background,100,0,"Background"));
+        obstacles.add(new Obstacle(background,100+background.getWidth(),0,"Background"));
+        obstacles.add(new Obstacle(background,100+background.getWidth()*2,0,"Background"));
+        obstacles.add(new Obstacle(background,100+background.getWidth()*3,0,"Background"));
         for(int i=0; i<height;i++){
             for(int j=1; j<width;j++){
                 createPieceofWorld(data[j+i*width],j*64,i*64);
@@ -98,20 +114,24 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         thread = new MainThread(getHolder(), this);
         thread.setRunning(true);
         thread.start();
+     //   audio.execute();
     }
     @Override
     public void surfaceDestroyed(SurfaceHolder holder){
+
         boolean retry = true;
         while (retry){
             try{
                 thread.setRunning(false);
+
                 thread.join();
             }catch(Exception e){e.printStackTrace();}
             retry = false;
         }
     }
     int counter=0;
-    int faceRight;
+    int faceRight=1;
+    boolean doOnce = false;
     @Override
     public boolean onTouchEvent(MotionEvent event){
         switch(event.getAction()) {
@@ -123,7 +143,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
                     player.MovementLeft = true;
                 faceRight=-1;
                 }if (event.getX()<200&&event.getX()>0&&event.getY()<1000){//Shooting
-                    obstacles.add(new Obstacle(resizedenemy,(int)player.m_xPos,(int)player.m_yPos,"Bullet",faceRight));
+                    obstacles.add(new Obstacle(bullet,(int)player.m_xPos,(int)player.m_yPos,"Bullet",faceRight));
                 }if (event.getX()>200&&player.onGround) {
                   player.Jump = true;
 
@@ -141,15 +161,36 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         }
         return true;
     }
+
     private void Gameover(){
-        //this should happen if you die
-        //  CurrentActivity.this.startActivity(myIntent);
-        System.out.println("YOU DEAD MOTHERFUCKER");
+        //surfaceDestroyed(this.getHolder());
+        if (!doOnce) {
+
+         //   audio.cancel(true);
+            getContext().startActivity(myIntent);
+            System.out.println("YOU DEAD MOTHERFUCKER");
+            doOnce = true;
+        }
+
     }
     private void GameWon(){
-        //  what happens when you win
-        //  CurrentActivity.this.startActivity(myIntent);
-        System.out.println("Heh, you won. so what");
+        if (!doOnce) {
+            getContext().startActivity(myIntent);
+            System.out.println("Heh, you won. so what");
+            doOnce = true;
+        }
+
+    }
+    public Obstacle checkCollision(Obstacle obs1, String tag){// do all Obstacles want this behaviour prolly should go in their class
+        for(Obstacle obstacle : obstacles) {
+            if (obstacle.tag == tag) {
+                if ((obs1.m_xPos < obstacle.m_xPos + obstacle.width && obs1.m_xPos + obs1.width > obstacle.m_xPos) &&
+                        (obs1.m_yPos < obstacle.m_yPos + obstacle.height && obs1.m_yPos + obs1.height > obstacle.m_yPos)) {
+                    return obstacle;
+                }
+            }
+        }
+        return null;
     }
     public void update(){
         player.update();
@@ -159,11 +200,23 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         boolean hitLeft=false;
         for( Obstacle obstacle : obstacles) {//object block obstalce TODO stick this inside a collision method and have 8 collision points corners and mids
             obstacle.update();
-            if ((player.m_xPos+11 < obstacle.m_xPos + obstacle.width && player.m_xPos + player.m_Bitmap.getWidth()-11 > obstacle.m_xPos) &&
-                 (player.m_yPos+ player.m_Bitmap.getHeight()-10 < obstacle.m_yPos + obstacle.height && player.m_yPos + player.m_Bitmap.getHeight() > obstacle.m_yPos)) {//Player bottom
+            if(obstacle.tag == "Bullet") {
+                Obstacle tempObs =checkCollision(obstacle, "Enemy");
+                if (tempObs != null) {
+                    tempObs.m_yPos+=1000;
+                    obstacle.m_yPos+=1000;
+                }
+                Obstacle tempObs2 =checkCollision(obstacle, "Wall");
+                if (tempObs2 != null) {
+                    obstacle.m_yPos+=1000;
+                }
+
+            }
+            if ((player.m_xPos+11 < obstacle.m_xPos + obstacle.width && player.m_xPos + 64-11 > obstacle.m_xPos) &&
+                 (player.m_yPos+ 64-10 < obstacle.m_yPos + obstacle.height && player.m_yPos + 64 > obstacle.m_yPos)) {//Player bottom
                 if(obstacle.tag =="Wall") {
                     touched2 = true;
-                    player.m_yPos = obstacle.m_yPos - player.m_Bitmap.getHeight() + 1;
+                    player.m_yPos = obstacle.m_yPos -64 + 1;
                     player.onGround = true;
                 }if(obstacle.tag =="Enemy") {
                      Gameover();
@@ -174,7 +227,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 
                 }
             }
-            if ((player.m_xPos+11 < obstacle.m_xPos + obstacle.width && player.m_xPos + player.m_Bitmap.getWidth()-11 > obstacle.m_xPos) &&
+            if ((player.m_xPos+11 < obstacle.m_xPos + obstacle.width && player.m_xPos +64-11 > obstacle.m_xPos) &&
                     (player.m_yPos < obstacle.m_yPos + obstacle.height && player.m_yPos + 10 > obstacle.m_yPos)){//Player top
                 if(obstacle.tag =="Wall") {
                     player.hitHead = true;
@@ -182,8 +235,8 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
                 }
 
             }
-            if ((player.m_xPos+ player.m_Bitmap.getWidth()-20 < obstacle.m_xPos + obstacle.width && player.m_xPos + player.m_Bitmap.getWidth() > obstacle.m_xPos) &&
-                    (player.m_yPos < obstacle.m_yPos + obstacle.height && player.m_yPos + player.m_Bitmap.getHeight()-2 > obstacle.m_yPos)){//Player right
+            if ((player.m_xPos+ 64-20 < obstacle.m_xPos + obstacle.width && player.m_xPos + 64 > obstacle.m_xPos) &&
+                    (player.m_yPos < obstacle.m_yPos + obstacle.height && player.m_yPos + 64-2 > obstacle.m_yPos)){//Player right
                 if(obstacle.tag =="Wall") {
                     touched = true;
                     if (player.MovementRight) {
@@ -193,7 +246,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
                 }
             }
             else if ((player.m_xPos < obstacle.m_xPos + obstacle.width && player.m_xPos +10 > obstacle.m_xPos) &&
-                    (player.m_yPos < obstacle.m_yPos + obstacle.height && player.m_yPos + player.m_Bitmap.getHeight()-2 > obstacle.m_yPos)){//Player left
+                    (player.m_yPos < obstacle.m_yPos + obstacle.height && player.m_yPos + 64-2 > obstacle.m_yPos)){//Player left
                 if(obstacle.tag =="Wall") {
                     touched = true;
                     if (player.MovementLeft) {
@@ -232,7 +285,12 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         for( Obstacle obstacle : obstacles) {
             obstacle.draw(canvas);
         }
+        canvas.drawBitmap(grass,0,canvas.getHeight()-100,null);
+        canvas.drawBitmap(resizedstone,100,canvas.getHeight()-100,null);
+        canvas.drawBitmap(resizedbullet,0,canvas.getHeight()-200,null);
+
         player.draw(canvas);
+
     }
 }
 

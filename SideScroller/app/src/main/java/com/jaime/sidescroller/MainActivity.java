@@ -2,6 +2,8 @@ package com.jaime.sidescroller;
 
 import android.app.Activity;
 import android.content.pm.ActivityInfo;
+import android.media.MediaPlayer;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Window;
 import android.view.WindowManager;
@@ -18,21 +20,56 @@ String stringData;
 int height;
 int width;
 int[] data;
+int levelIDSafety =R.raw.level1;
+
+    MediaPlayer player;
+    //http://soundimage.org/wp-content/uploads/2016/07/Fantasy_Game_Background_Looping.mp3
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        ReadJson();
+        int levelID = getIntent().getIntExtra("LEVEL_TO_LOAD",levelIDSafety);
+        ReadJson(levelID);
+        player = MediaPlayer.create(MainActivity.this, R.raw.fantasy_bgm);
+        player.setLooping(true); // Set looping
+        player.setVolume(1.0f, 1.0f);
+        player.start();
         setContentView(new GamePanel(this,height,width,data));
+
 
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        player.stop();
+    }
 
-    public void ReadJson(){
+    @Override
+    protected void onStart() {
+        super.onStart();
+        player.start();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        player.stop();
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        player.start();
+    }
+
+    public void ReadJson(int levelID){
         try {
-            InputStream is = this.getResources().openRawResource(R.raw.level1);
+            InputStream is = this.getResources().openRawResource(levelID);
             int size = is.available();
             byte[] buffer = new byte[size];
             is.read(buffer);
@@ -65,4 +102,8 @@ int[] data;
             e.printStackTrace();
         }
     }
+
+
+
+
 }

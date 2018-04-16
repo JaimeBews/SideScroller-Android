@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.Button;
 
 public class MenuActivity extends Activity {
-
+int levelID;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,11 +31,16 @@ public class MenuActivity extends Activity {
 
     private void startPlay1() {
         Intent intentInstance = new Intent(this, MainActivity.class);
+        levelID =R.raw.level1;
+        intentInstance.putExtra("LEVEL_TO_LOAD", levelID);
         startActivity(intentInstance);
+
     }
 
     private void startPlay2() {
         Intent intentInstance = new Intent(this, MainActivity.class);
+        levelID =R.raw.level2;
+        intentInstance.putExtra("LEVEL_TO_LOAD", levelID);
         startActivity(intentInstance);
     }
 

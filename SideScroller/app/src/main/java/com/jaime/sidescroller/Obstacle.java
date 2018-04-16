@@ -44,7 +44,7 @@ public class Obstacle implements GameObject{
 
     }
     public void draw(Canvas canvas){
-        if(m_xPos>0&&m_xPos<canvas.getWidth())
+        if(m_xPos>0&&m_xPos<canvas.getWidth()||tag=="Background")
              canvas.drawBitmap(bitmap,m_xPos,m_yPos,null);
 
     }

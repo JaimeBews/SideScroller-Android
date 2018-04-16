@@ -2,6 +2,7 @@ package com.jaime.sidescroller;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Rect;
 
 import java.util.ArrayList;
 
@@ -16,6 +17,7 @@ public class Player implements GameObject {
     float m_XSpeed;
     float m_YSpeed;
     float m_YAccel;
+
     boolean MovementRight = false;
     boolean MovementLeft = false;
     boolean Jump = false;
@@ -26,7 +28,7 @@ public class Player implements GameObject {
 
     boolean hitRight = false;
     boolean hitLeft = false;
-
+int i;
     public Player(Bitmap bitmap, float xPos, float yPos){
         m_Bitmap=bitmap;
         m_xPos=xPos;
@@ -36,7 +38,8 @@ public class Player implements GameObject {
         m_YSpeed=1.0f;
     }
     public void draw(Canvas canvas){
-        canvas.drawBitmap(m_Bitmap,m_xPos,m_yPos,null);//TODO animate
+        i++;
+        canvas.drawBitmap(m_Bitmap, new Rect((i%6)*64,0,(i%6)*64+64,64), new Rect((int)m_xPos,(int)m_yPos,(int)m_xPos+64,(int)m_yPos+64), null);
     }
    // public void Jump(){
    //     if(onGround)
@@ -80,7 +83,8 @@ public class Player implements GameObject {
         }
 
         if(hitHead){
-            m_YSpeed=.2f;
+            m_YSpeed=.5f;
+            this.m_yPos+=5;
         }
     }
 
