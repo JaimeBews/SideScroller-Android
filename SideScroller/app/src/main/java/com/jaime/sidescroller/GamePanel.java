@@ -134,9 +134,12 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
     boolean doOnce = false;
     @Override
     public boolean onTouchEvent(MotionEvent event){
-        switch(event.getAction()) {
+        switch(event.getActionMasked()) {
             case MotionEvent.ACTION_DOWN:
             case MotionEvent.ACTION_POINTER_DOWN:
+                if (event.getX()>200&&player.onGround) {
+                    player.Jump = true;
+                }
                 if (event.getX()<200&&event.getX()>100&&event.getY()>1000){
                     player.MovementRight = true;
                     faceRight=1;
@@ -145,10 +148,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
                 faceRight=-1;
                 }if (event.getX()<200&&event.getX()>0&&event.getY()<1000){//Shooting
                     obstacles.add(new Obstacle(bullet,(int)player.m_xPos,(int)player.m_yPos,"Bullet",faceRight));
-                }if (event.getX()>200&&player.onGround) {
-                  player.Jump = true;
-
-            }
+                }
                 break;
 
             case MotionEvent.ACTION_MOVE:
