@@ -17,6 +17,8 @@ public class Obstacle implements GameObject{
     public String tag;
     Bitmap bitmap;
     int m_direction =0;
+    int i = 0;
+    int j = 0;
     public Obstacle(Bitmap bitmap,int xPos,int yPos,String tag,int direction){
         super();
         this.bitmap=bitmap;
@@ -44,8 +46,20 @@ public class Obstacle implements GameObject{
 
     }
     public void draw(Canvas canvas){
-        if(m_xPos>0&&m_xPos<canvas.getWidth()||tag=="Background")
-             canvas.drawBitmap(bitmap,m_xPos,m_yPos,null);
+        if(this.tag =="Enemy")
+        {
+            i++;
+            canvas.drawBitmap(bitmap, new Rect((i%20)*64,0,(i%20)*64+64,64), new Rect((int)m_xPos,(int)m_yPos,(int)m_xPos+64,(int)m_yPos+64), null);
+        }
+        else if(this.tag =="Bullet")
+        {
+            j++;
+            canvas.drawBitmap(bitmap, new Rect((j%8)*16,0,(j%8)*16+16,16), new Rect((int)m_xPos,(int)m_yPos,(int)m_xPos+16,(int)m_yPos+16), null);
+        }
+        else if(m_xPos>0&&m_xPos<canvas.getWidth()||tag=="Background"){
+            canvas.drawBitmap(bitmap,m_xPos,m_yPos,null);
+        }
+
 
     }
 }

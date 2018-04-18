@@ -28,6 +28,8 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 
    // public Obstacle(Bitmap bitmap, float xPos, float yPos);
     private Bitmap grass = BitmapFactory.decodeResource(getResources(), R.drawable.left);
+    Bitmap resizedgrass = Bitmap.createScaledBitmap(
+            grass, 100, 100, false);
     private Bitmap bullet = BitmapFactory.decodeResource(getResources(), R.drawable.ice_bolt);
     Bitmap resizedbullet = Bitmap.createScaledBitmap(
             bullet, 200, 100, false);
@@ -51,9 +53,10 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
     Bitmap resizeddirt_bot = Bitmap.createScaledBitmap(
             dirt_bot, 64, 64, false);
     private Bitmap end_point = BitmapFactory.decodeResource(getResources(), R.drawable.end_point);
-    private Bitmap enemy = BitmapFactory.decodeResource(getResources(), R.drawable.golem_still);
+    private Bitmap enemy = BitmapFactory.decodeResource(getResources(), R.drawable.golem);
     Bitmap resizedenemy = Bitmap.createScaledBitmap(
-            enemy, 64, 64, false);
+            enemy, 64*20, 64, false);
+
 
     public ArrayList<Obstacle> obstacles= new ArrayList<>();
     Player player = new Player(resizedplayerSheetBitmap,300,200);
@@ -288,6 +291,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         }
         canvas.drawBitmap(grass,0,canvas.getHeight()-100,null);
         canvas.drawBitmap(resizedstone,100,canvas.getHeight()-100,null);
+        canvas.drawBitmap(resizedgrass,100,canvas.getHeight()-100,null);
         canvas.drawBitmap(resizedbullet,0,canvas.getHeight()-200,null);
 
         player.draw(canvas);
