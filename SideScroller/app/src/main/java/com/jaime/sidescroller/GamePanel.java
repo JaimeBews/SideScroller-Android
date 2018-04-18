@@ -27,12 +27,12 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
     int[] data;
 
    // public Obstacle(Bitmap bitmap, float xPos, float yPos);
-    private Bitmap grass = BitmapFactory.decodeResource(getResources(), R.drawable.greenbushlol);
+    private Bitmap grass = BitmapFactory.decodeResource(getResources(), R.drawable.left);
     private Bitmap bullet = BitmapFactory.decodeResource(getResources(), R.drawable.ice_bolt);
     Bitmap resizedbullet = Bitmap.createScaledBitmap(
             bullet, 200, 100, false);
     private Bitmap background = BitmapFactory.decodeResource(getResources(), R.drawable.background_inside);
-    private Bitmap stone = BitmapFactory.decodeResource(getResources(), R.drawable.repeatworldtile);
+    private Bitmap stone = BitmapFactory.decodeResource(getResources(), R.drawable.right);
     Bitmap resizedstone = Bitmap.createScaledBitmap(
             stone, 100, 100, false);
     private Bitmap playerBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.wizardwalk);
@@ -136,6 +136,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
     public boolean onTouchEvent(MotionEvent event){
         switch(event.getAction()) {
             case MotionEvent.ACTION_DOWN:
+            case MotionEvent.ACTION_POINTER_DOWN:
                 if (event.getX()<200&&event.getX()>100&&event.getY()>1000){
                     player.MovementRight = true;
                     faceRight=1;

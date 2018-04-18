@@ -33,8 +33,8 @@ int i;
         m_Bitmap=bitmap;
         m_xPos=xPos;
         m_yPos=yPos;
-        m_XSpeed = 5;
-        m_YAccel=1.1f;
+        m_XSpeed = 10;
+        m_YAccel=1.2f;
         m_YSpeed=1.0f;
     }
     public void draw(Canvas canvas){
@@ -77,7 +77,7 @@ int i;
 
         if(Jump) {
             this.m_yPos-=5;
-            m_YSpeed = -20;
+            m_YSpeed = -55;
             Jump=false;
             onGround=false;
         }
