@@ -289,9 +289,9 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         for( Obstacle obstacle : obstacles) {
             obstacle.draw(canvas);
         }
-        canvas.drawBitmap(grass,0,canvas.getHeight()-100,null);
+       // canvas.drawBitmap(grass,0,canvas.getHeight()-100,null);
         canvas.drawBitmap(resizedstone,100,canvas.getHeight()-100,null);
-        canvas.drawBitmap(resizedgrass,100,canvas.getHeight()-100,null);
+        canvas.drawBitmap(resizedgrass,0,canvas.getHeight()-100,null);
         canvas.drawBitmap(resizedbullet,0,canvas.getHeight()-200,null);
 
         player.draw(canvas);

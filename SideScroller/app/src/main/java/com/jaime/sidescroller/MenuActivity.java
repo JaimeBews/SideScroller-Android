@@ -39,7 +39,7 @@ int levelID;
 
     private void startPlay2() {
         Intent intentInstance = new Intent(this, MainActivity.class);
-        levelID =R.raw.level2;
+        levelID =R.raw.level3;
         intentInstance.putExtra("LEVEL_TO_LOAD", levelID);
         startActivity(intentInstance);
     }

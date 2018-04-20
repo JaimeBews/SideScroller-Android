@@ -71,7 +71,7 @@ int i;
             else if (this.m_YSpeed<-.3f)
                 this.m_YSpeed=this.m_YSpeed *1/m_YAccel;
             else
-                this.m_YSpeed=0.3f;
+                this.m_YSpeed=0.6f;
             this.m_yPos+=m_YSpeed;
         }
 
