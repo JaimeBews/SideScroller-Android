@@ -9,6 +9,7 @@ import android.graphics.Rect;
  * Created by Jaime on 4/9/2018.
  */
 
+//sets up obstacles
 public class Obstacle implements GameObject{
 
     float m_xPos;
@@ -29,6 +30,7 @@ public class Obstacle implements GameObject{
         width = 64;
         height = bitmap.getHeight();
     }
+    //creates bitmaps
     public Obstacle(Bitmap bitmap,int xPos,int yPos,String tag){
         super();
         this.bitmap=bitmap;
@@ -38,13 +40,14 @@ public class Obstacle implements GameObject{
         width = 64;
         height = bitmap.getHeight();
     }
-
+    //update obstacles
     public void update(){
         if(m_direction!=0)
             m_xPos += m_direction * 15;
 
 
     }
+    //handle enemy animation and background
     public void draw(Canvas canvas){
         if(this.tag =="Enemy")
         {

@@ -15,6 +15,9 @@ import org.json.JSONObject;
 import java.io.InputStream;
 import java.util.Arrays;
 
+//MacDonald Maunder 101060770, James Bews 101085383, Dennis Nguyen 101068295
+//side scroller game
+
 public class MainActivity extends Activity {
 String stringData;
 int height;
@@ -66,7 +69,7 @@ int levelIDSafety =R.raw.level1;
         super.onResume();
         player.start();
     }
-
+//reads the tiled file
     public void ReadJson(int levelID){
         try {
             InputStream is = this.getResources().openRawResource(levelID);

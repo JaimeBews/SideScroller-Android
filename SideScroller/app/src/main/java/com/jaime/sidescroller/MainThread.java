@@ -30,6 +30,8 @@ public class MainThread extends Thread {
         this.gamePanel=gamePanel;
     }
 
+    //sets up frame rate and canvas
+
     @Override
     public void run(){
         long startTime;
